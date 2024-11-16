@@ -22,6 +22,9 @@ const socket_io_1 = require("socket.io");
 const chat_1 = __importDefault(require("./api/chat/chat"));
 const friends_1 = __importDefault(require("./api/friends/friends"));
 const post_1 = __importDefault(require("./api/post/post"));
+const modify_1 = __importDefault(require("./api/post/modify/modify"));
+const userData_1 = __importDefault(require("./api/user/userData"));
+const user_1 = __importDefault(require("./api/user/user"));
 class App {
     app;
     server;
@@ -68,12 +71,12 @@ class App {
         }));
     }
     configureAPIroutes() {
-        this.app.use('/api/user', require('./api/user/userData'));
-        this.app.use('/api/auth', require('./api/user/user'));
+        this.app.use('/api/user', new userData_1.default().router);
+        this.app.use('/api/auth', new user_1.default().router);
         this.app.use('/api/friends', new friends_1.default(this.socketController).router);
         this.app.use('/api/chat', new chat_1.default().router);
         this.app.use('/api/post', new post_1.default(this.socketController).router);
-        this.app.use('/api/post/edit', require('./api/post/modify/modify'));
+        this.app.use('/api/post/edit', new modify_1.default().router);
     }
     configureSockets() {
         this.socketController.initializeSocketHandlers();
